@@ -1,0 +1,40 @@
+{
+  "name": "crypto-trader",
+  "version": "1.0.0",
+  "description": "auto crypto trader",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "tsc && node dist/app.js",
+    "start:dev": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lzientek/crypto-trader.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "crypto",
+    "blockchain",
+    "finance"
+  ],
+  "author": "lzientek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lzientek/crypto-trader/issues"
+  },
+  "homepage": "https://github.com/lzientek/crypto-trader#readme",
+  "devDependencies": {
+    "@types/node": "^13.7.1",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "config": "^3.2.5",
+    "dotenv": "^8.2.0",
+    "node-binance-api": "^0.10.2"
+  }
+}
