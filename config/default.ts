@@ -1,9 +1,9 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
-    "binance": {
+    binance: {
         APIKEY: process.env.APIKEY,
-        APISECRET: process.env.APISECRET
-    }
-}
+        APISECRET: process.env.APISECRET,
+    },
+};
