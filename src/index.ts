@@ -2,15 +2,15 @@ import Binance from 'node-binance-api';
 import config from 'config';
 import { displayChart } from './displayChart';
 
-export const nbVert = 50,
-    incrHor = 3;
-
 const main = async (): Promise<void> => {
     const binance = new Binance().options({
         ...config.binance,
     });
 
-    const balance = await binance.futuresCandles('BTCUSDT', '1h');
+    const balance = await binance.candlesticks('BTCUSDT', '1d', false, {
+        limit: 500,
+        startTime: +new Date() - 60 * 24 * 60 * 60 * 1000,
+    });
 
     displayChart(balance);
 };
