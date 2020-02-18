@@ -10,6 +10,10 @@ const displayCorelation = (
     incr: number,
     size: number,
 ): void => {
+    console.log(
+        'linear corelation _____________________________________________________________________________________',
+    );
+
     const f = cor(corData);
     const fmin = cor(corDataMin);
     const fmax = cor(corDataMax);
@@ -65,11 +69,6 @@ export const displayChart = (balance: Array<[number, string, string, string, str
         }
         console.log(e);
     }
-
-    //corélation ligne
-    console.log(
-        'linear corelation _____________________________________________________________________________________',
-    );
 
     displayCorelation(corData, corDataMax, corDataMin, max, incr, a.length);
 };
