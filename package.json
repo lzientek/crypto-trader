@@ -35,11 +35,12 @@
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "ts-node": "^8.6.2",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.2"
   },
   "dependencies": {
     "config": "^3.2.5",
     "dotenv": "^8.2.0",
-    "node-binance-api": "^0.10.2"
+    "node-binance-api": "^0.10.2",
+    "node-telegram-bot-api": "^0.40.0"
   }
 }
