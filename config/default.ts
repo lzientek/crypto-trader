@@ -10,4 +10,6 @@ export default {
         APIKEY: process.env.TELEGRAM_APIKEY,
         USER_ID: parseInt(process.env.TELEGRAM_USER_ID),
     },
+    refresh: 10,
+    defaultAcceptance: '0.5%',
 };
