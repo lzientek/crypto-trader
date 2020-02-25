@@ -33,7 +33,6 @@ const checkPrice = async (
     lastHigh: Record<string, number>,
 ): Promise<void> => {
     acceptance = calculateAcceptance(acceptance, actualAvgPrice);
-    console.log(acceptance);
 
     if (!lastHigh[symbol] || actualAvgPrice > lastHigh[symbol]) {
         lastHigh[symbol] = actualAvgPrice;
@@ -45,8 +44,6 @@ const checkPrice = async (
         let txt = `${symbol} baisse de ${lastHigh[symbol] - actualAvgPrice} ${symbol.substring(
             3,
         )}\nNouveaux prix ${actualAvgPrice}${symbol.substring(3)}\n`;
-
-        console.log(txt);
 
         if (sell) {
             //binance sell
@@ -75,6 +72,7 @@ const checkPrice = async (
         if (notify) {
             await sendMessage(txt);
         }
+        console.log(txt);
 
         lastHigh[symbol] = actualAvgPrice;
     }
