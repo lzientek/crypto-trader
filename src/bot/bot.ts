@@ -16,7 +16,9 @@ export const start = async (): Promise<void> => {
     });
 };
 
-export const sendMessage = (text: string, ...params): Promise<void> =>
-    bot.sendMessage(config.telegram.USER_ID, text, ...params);
+export const sendMessage = async (text: string, ...params): Promise<void> => {
+    console.log('send telegram: ', text, params);
+    await bot.sendMessage(config.telegram.USER_ID, text, ...params);
+};
 
 export default bot;

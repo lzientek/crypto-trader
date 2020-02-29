@@ -8,19 +8,8 @@ const binance = new Binance().options({
 });
 
 export default async (): Promise<void> => {
-    const balance = await binance.candlesticks('BATUSDT', '1m', false, {
-        limit: 500,
-        startTime: +new Date() - 1 * 24 * 60 * 60 * 1000,
-    });
-
-    displayChart(balance);
-
     return new Promise(() => {
-        stoploss([
-            { symbol: 'BTCUSDT', sell: true },
-            { symbol: 'BATUSDT', sell: true, notify: true },
-            { symbol: 'ETHUSDT', notify: true, sell: true },
-        ]);
+        stoploss([{ symbol: 'BTCUSDT', notify: true }, { symbol: 'BATUSDT' }, { symbol: 'ETHUSDT', notify: true }]);
     });
 };
 
@@ -28,4 +17,13 @@ export const getWalletBalance = async (coin: string): Promise<{ free: number } |
     const all = await binance.signedRequest('https://api.binance.com/sapi/v1/capital/config/getall');
 
     return all.find(balance => balance.coin === coin);
+};
+
+export const displayChartAndTrend = async (symbol: string, period = '1m'): Promise<void> => {
+    const balance = await binance.candlesticks(symbol, period, false, {
+        limit: 500,
+        startTime: +new Date() - 1 * 24 * 60 * 60 * 1000,
+    });
+
+    displayChart(balance);
 };

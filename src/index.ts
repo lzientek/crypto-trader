@@ -1,8 +1,8 @@
-import { start } from './bot/bot';
+import { start as startBot } from './bot/bot';
 import binance from './binance/binance';
 
 const main = async (): Promise<void> => {
-    start();
+    startBot();
     binance();
 };
 
