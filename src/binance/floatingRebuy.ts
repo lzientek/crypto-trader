@@ -42,11 +42,14 @@ const checkPrice = async (
             if (sellBalance && sellBalance > 2) {
                 console.log('set buy order for', sellBalance, symbol.substring(0, 3));
                 try {
-                    const result = await binance.order('BUY', symbol, sellBalance, null, { type: 'MARKET' });
+                    const result = await binance.order('BUY', symbol, sellBalance / actualAvgPrice, null, {
+                        type: 'MARKET',
+                    });
 
-                    txt += `Vos ${result.executedQty} ${symbol.substring(0, 3)} on été acheté pour ${
-                        result.price
-                    } ${symbol.substring(3)}.`;
+                    txt += `Vos ${result.executedQty || sellBalance} ${symbol.substring(
+                        0,
+                        3,
+                    )} on été acheté pour ${result.price || actualAvgPrice / sellBalance} ${symbol.substring(3)}.`;
 
                     console.log('order result', result);
                     await writePartialDb('sellPrices', {

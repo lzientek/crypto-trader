@@ -56,9 +56,10 @@ const checkPrice = async (
                 try {
                     const result = await binance.order('SELL', symbol, balance.free, null, { type: 'MARKET' });
 
-                    txt += `Vos ${result.executedQty} ${symbol.substring(0, 3)} on été vendu pour ${
-                        result.price
-                    } ${symbol.substring(3)}.`;
+                    txt += `Vos ${result.executedQty || balance.free} ${symbol.substring(
+                        0,
+                        3,
+                    )} on été vendu pour ${result.price || balance.free * actualAvgPrice} ${symbol.substring(3)}.`;
                     console.log('order result', result);
                     await writePartialDb('sellPrices', {
                         [symbol]: result.price ? result.price : balance.free * actualAvgPrice,
