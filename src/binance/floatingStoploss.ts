@@ -2,6 +2,7 @@ import Binance from 'node-binance-api';
 import config from 'config';
 import { sendMessage } from '../bot/bot';
 import { getWalletBalance } from './binance';
+import { writePartialDb } from '../utils/jsonDb';
 
 interface StopLossElement {
     symbol: string;
@@ -49,7 +50,7 @@ const checkPrice = async (
             //binance sell
             const balance = await getWalletBalance(symbol.substring(0, 3));
 
-            //not perfect works with dollar convertion
+            //not perfect works only with dollar convertion
             if (balance.free * actualAvgPrice > 2) {
                 console.log('set sell order for', balance.free, symbol.substring(0, 3));
                 try {
@@ -58,8 +59,10 @@ const checkPrice = async (
                     txt += `Vos ${result.executedQty} ${symbol.substring(0, 3)} on été vendu pour ${
                         result.price
                     } ${symbol.substring(3)}.`;
-
                     console.log('order result', result);
+                    await writePartialDb('sellPrices', {
+                        [symbol]: result.price ? result.price : balance.free * actualAvgPrice,
+                    });
                 } catch (error) {
                     console.error('Error selling', error.toJSON().body);
                     txt += `Echec de vente ${JSON.parse(error.toJSON().body)?.msg}.`;
@@ -89,6 +92,6 @@ export default (item: Array<StopLossElement>): void => {
                 checkPrice(parseFloat(value), el, lastHigh);
             }),
         );
-        console.log(lastHigh);
+        console.log('lastHigh', lastHigh);
     }, config.refresh * 1000);
 };
