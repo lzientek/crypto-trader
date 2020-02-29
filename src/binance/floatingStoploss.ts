@@ -2,7 +2,7 @@ import Binance from 'node-binance-api';
 import config from 'config';
 import { sendMessage } from '../bot/bot';
 import { getWalletBalance } from './binance';
-import { writePartialDb } from '../utils/jsonDb';
+import { writePartialDb, readDb } from '../utils/jsonDb';
 
 interface StopLossElement {
     symbol: string;
@@ -81,8 +81,8 @@ const checkPrice = async (
     }
 };
 
-export default (item: Array<StopLossElement>): void => {
-    const lastHigh: Record<string, number> = {};
+export default async (item: Array<StopLossElement>): Promise<void> => {
+    const lastHigh: Record<string, number> = (await readDb('lasthigh')) || {};
 
     setInterval(async () => {
         await Promise.all(
@@ -92,6 +92,8 @@ export default (item: Array<StopLossElement>): void => {
                 checkPrice(parseFloat(value), el, lastHigh);
             }),
         );
+        await writePartialDb('lasthigh', lastHigh);
+
         console.log('lastHigh', lastHigh);
     }, config.refresh * 1000);
 };

@@ -70,8 +70,8 @@ const checkPrice = async (
     }
 };
 
-export default (item: Array<GetProfitElement>): void => {
-    const lastLow: Record<string, number> = {};
+export default async (item: Array<GetProfitElement>): Promise<void> => {
+    const lastLow: Record<string, number> = (await readDb('lastlow')) || {};
 
     setInterval(async () => {
         await Promise.all(
@@ -81,6 +81,7 @@ export default (item: Array<GetProfitElement>): void => {
                 checkPrice(parseFloat(value), el, lastLow);
             }),
         );
+        await writePartialDb('lastlow', lastLow);
         console.log('low', lastLow);
     }, config.refresh * 1000);
 };
