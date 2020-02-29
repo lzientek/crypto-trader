@@ -67,7 +67,6 @@ const checkPrice = async (
         if (notify) {
             await sendMessage(txt);
         }
-        console.log(txt);
 
         lastLow[symbol] = actualAvgPrice;
     }

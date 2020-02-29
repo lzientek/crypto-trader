@@ -76,7 +76,6 @@ const checkPrice = async (
         if (notify) {
             await sendMessage(txt);
         }
-        console.log(txt);
 
         lastHigh[symbol] = actualAvgPrice;
     }
@@ -95,6 +94,6 @@ export default async (item: Array<StopLossElement>): Promise<void> => {
         );
         await writePartialDb('lasthigh', lastHigh);
 
-        console.log('lastHigh', lastHigh);
+        console.log('high', lastHigh);
     }, config.refresh * 1000);
 };
