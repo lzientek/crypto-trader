@@ -13,7 +13,6 @@ interface StopLossElement {
 const binance = new Binance().options({
     ...config.binance,
     log: console.log,
-    test: true,
 });
 
 function calculateAcceptance(acceptance: number | string | null, actualAvgPrice: number): number {

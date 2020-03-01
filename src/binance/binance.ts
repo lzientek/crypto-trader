@@ -10,15 +10,11 @@ const binance = new Binance().options({
 
 export default async (): Promise<void> => {
     return new Promise(() => {
-        stoploss([
-            { symbol: 'BTCUSDT', notify: true },
-            { symbol: 'BATUSDT', notify: true, sell: true },
-            { symbol: 'ETHUSDT', notify: true },
-        ]);
+        stoploss([{ symbol: 'BTCUSDT' }, { symbol: 'BATUSDT', notify: true, sell: true }, { symbol: 'ETHUSDT' }]);
         takeprofit([
-            { symbol: 'BTCUSDT', notify: true },
-            { symbol: 'BATUSDT', notify: true, buy: true },
-            { symbol: 'ETHUSDT', notify: true },
+            { symbol: 'BTCUSDT' },
+            { symbol: 'BATUSDT', notify: true, buy: true, roundQuantity: 100, roundPrice: 10000 },
+            { symbol: 'ETHUSDT' },
         ]);
     });
 };

@@ -4,21 +4,33 @@ import { sendMessage } from '../bot/bot';
 import { writePartialDb, readDb } from '../utils/jsonDb';
 import calculateAcceptance from '../utils/calculateAcceptance';
 
-interface GetProfitElement {
+interface ProfitBaseType {
     symbol: string;
     acceptance?: number | string;
-    buy?: boolean;
     notify?: boolean;
+    buy?: false | undefined;
+    roundPrice?: undefined;
+    roundQuantity?: undefined;
 }
+interface BuyProfitType {
+    symbol: string;
+    acceptance?: number | string;
+    notify?: boolean;
+    buy: true;
+    roundPrice: 1 | 10 | 100 | 1000 | 10000 | 100000;
+    roundQuantity: 1 | 10 | 100 | 1000 | 10000 | 100000;
+}
+
+type GetProfitElement = ProfitBaseType | BuyProfitType;
+
 const binance = new Binance().options({
     ...config.binance,
     log: console.log,
-    test: true,
 });
 
 const checkPrice = async (
     actualAvgPrice: number,
-    { symbol, acceptance, notify, buy }: GetProfitElement,
+    { symbol, acceptance, notify, buy, roundPrice, roundQuantity }: GetProfitElement,
     lastLow: Record<string, number>,
 ): Promise<void> => {
     acceptance = calculateAcceptance(acceptance, actualAvgPrice);
@@ -36,24 +48,36 @@ const checkPrice = async (
 
         if (buy) {
             //binance buy
-            const sellBalance = await readDb('sellPrices')[symbol];
+            const sellBalance = (await readDb('sellPrices'))[symbol];
 
             //not perfect works only with dollar convertion
             if (sellBalance && sellBalance > 2) {
                 console.log('set buy order for', sellBalance, symbol.substring(0, 3));
                 try {
-                    const result = await binance.order('BUY', symbol, sellBalance / actualAvgPrice, null, {
-                        type: 'MARKET',
-                    });
+                    console.log('jnoij', Math.round((sellBalance / actualAvgPrice) * roundQuantity) / roundQuantity);
+                    const result = await binance.order(
+                        'BUY',
+                        symbol,
+                        Math.round((sellBalance / actualAvgPrice) * roundQuantity) / roundQuantity,
+                        Math.round(actualAvgPrice * roundPrice) / roundPrice,
+                        {
+                            type: 'LIMIT',
+                            timeInForce: 'IOC',
+                        },
+                    );
 
-                    txt += `Vos ${result.executedQty || sellBalance} ${symbol.substring(
+                    txt += `Vos ${result.executedQty ||
+                        Math.round((sellBalance / actualAvgPrice) * roundQuantity) / roundQuantity} ${symbol.substring(
                         0,
                         3,
-                    )} on été acheté pour ${result.price || actualAvgPrice / sellBalance} ${symbol.substring(3)}.`;
+                    )} on été acheté pour ${result.price ||
+                        Math.round(actualAvgPrice * roundPrice) / roundPrice} ${symbol.substring(3)}.`;
 
                     console.log('order result', result);
                     await writePartialDb('sellPrices', {
-                        [symbol]: sellBalance - result.price ? result.price : actualAvgPrice / sellBalance,
+                        [symbol]:
+                            sellBalance -
+                            (result.price ? result.price : Math.round(actualAvgPrice * roundPrice) / roundPrice),
                     });
                 } catch (error) {
                     console.error('Error buying', error.toJSON().body);
