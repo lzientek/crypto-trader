@@ -26,6 +26,8 @@ type GetProfitElement = ProfitBaseType | BuyProfitType;
 const binance = new Binance().options({
     ...config.binance,
     log: console.log,
+    test: true,
+
 });
 
 const checkPrice = async (
